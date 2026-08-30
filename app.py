@@ -16,11 +16,14 @@ def get_base_path():
     return os.path.dirname(os.path.abspath(__file__))
 
 BASE_DIR = get_base_path()
+print(f"🔍 BASE_DIR: {BASE_DIR}", file=sys.stderr)
 
 # ========== تنظیمات Flask ==========
 app = Flask(__name__,
             template_folder=os.path.join(BASE_DIR, 'templates'),
             static_folder=os.path.join(BASE_DIR, 'static'))
+print(f"🔍 Template folder: {app.template_folder}", file=sys.stderr)
+print(f"🔍 Static folder: {app.static_folder}", file=sys.stderr)
 
 app.config['SECRET_KEY'] = secrets.token_hex(32)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(BASE_DIR, 'invitations.db')
