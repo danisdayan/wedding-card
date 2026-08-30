@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سیستم کارت دعوت عروسی</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Vazir', Tahoma, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f5e6d3, #faf0e6);
+        }
+        .welcome { text-align: center; padding: 40px; }
+        .welcome .icon { font-size: 80px; margin-bottom: 20px; }
+        .welcome h1 { color: #2c1810; margin-bottom: 10px; }
+        .welcome p { color: #a08060; margin-bottom: 30px; }
+        .welcome .btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+        .welcome .btn:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(255,215,0,0.3); }
+    </style>
+</head>
+<body>
+    <div class="welcome">
+        <div class="icon">💍</div>
+        <h1>به سیستم کارت دعوت عروسی خوش آمدید</h1>
+        <p>این سیستم برای مدیریت و ارسال کارت دعوت عروسی طراحی شده</p>
+        <a href="{{ url_for('admin_login') }}" class="btn">🔐 ورود به پنل مدیریت</a>
+    </div>
+</body>
+</html>

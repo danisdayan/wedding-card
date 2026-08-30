@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت - کارت دعوت عروسی</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Vazir', Tahoma, sans-serif;
+            background: #f5e6d3;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        
+        .header {
+            background: linear-gradient(135deg, #2c1810, #4a2c1a);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .header h1 { font-size: 24px; }
+        .header .stats { display: flex; gap: 20px; }
+        .header .stat { text-align: center; }
+        .header .stat .num { font-size: 28px; font-weight: bold; }
+        .header .stat .label { font-size: 12px; opacity: 0.8; }
+        
+        .add-section {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        .add-section h2 { margin-bottom: 15px; color: #2c1810; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #5c4033; font-size: 14px; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 15px;
+            border: 2px solid #e0d5c5;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+        .form-row { display: flex; gap: 15px; }
+        .form-row .form-group { flex: 1; }
+        
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.3s;
+        }
+        .btn-primary { background: linear-gradient(135deg, #ffd700, #b8860b); color: white; }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,215,0,0.3); }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; }
+        .btn-sm { padding: 5px 12px; font-size: 12px; }
+        
+        .table-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        th {
+            background: #2c1810;
+            color: white;
+            padding: 12px 15px;
+            text-align: right;
+            font-size: 13px;
+        }
+        td {
+            padding: 10px 15px;
+            border-bottom: 1px solid #f0e8d8;
+            font-size: 13px;
+        }
+        tr:hover { background: #faf5eb; }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+        }
+        .badge-seen { background: #27ae60; color: white; }
+        .badge-unseen { background: #e74c3c; color: white; }
+        
+        .link-box {
+            background: #f8f4ec;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 11px;
+            direction: ltr;
+            display: inline-block;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .copy-btn {
+            background: none;
+            border: 1px solid #ffd700;
+            color: #b8860b;
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+        }
+        .copy-btn:hover { background: #ffd700; color: white; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-content h2 { margin-bottom: 15px; color: #2c1810; }
+        .modal-content .info-row { margin: 8px 0; display: flex; }
+        .modal-content .info-row .lbl { color: #a08060; min-width: 100px; }
+        .modal-content .info-row .val { color: #2c1810; }
+        
+        .search-box {
+            padding: 10px 15px;
+            border: 2px solid #e0d5c5;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 300px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #27ae60;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 8px;
+            display: none;
+            z-index: 2000;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #a08060;
+        }
+        .empty-state .icon { font-size: 60px; margin-bottom: 15px; }
+        
+        @media (max-width: 768px) {
+            .header { flex-direction: column; text-align: center; }
+            .form-row { flex-direction: column; gap: 0; }
+            .table-container { overflow-x: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>💍 پنل مدیریت کارت دعوت</h1>
+                <p style="opacity:0.7; font-size:13px; margin-top:5px;">{{ total }} مهمان</p>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="num" style="color:#27ae60;">{{ seen_count }}</div>
+                    <div class="label">دیده شده</div>
+                </div>
+                <div class="stat">
+                    <div class="num" style="color:#e74c3c;">{{ unseen_count }}</div>
+                    <div class="label">دیده نشده</div>
+                </div>
+                <div class="stat">
+                    <div class="num">{{ total }}</div>
+                    <div class="label">کل</div>
+                </div>
+            </div>
+            <div>
+                <a href="{{ url_for('admin_logout') }}" class="btn btn-sm" style="background:#e74c3c; color:white; text-decoration:none;">🚪 خروج</a>
+            </div>
+        </div>
+        
+        <div class="add-section">
+            <h2>➕ افزودن مهمان جدید</h2>
+            <form id="addForm" enctype="multipart/form-data">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>نام و نام خانوادگی</label>
+                        <input type="text" name="name" required placeholder="مثال: حمید حمیدی">
+                    </div>
+                    <div class="form-group">
+                        <label>نوع همراه</label>
+                        <select name="companion_type">
+                            <option value="به تنهایی">🙋 به تنهایی</option>
+                            <option value="با خانواده">👨‍👩‍👧‍👦 با خانواده</option>
+                            <option value="با بانو">💑 با بانو</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>عکس (اختیاری)</label>
+                    <input type="file" name="photo" accept="image/*">
+                </div>
+                <button type="submit" class="btn btn-primary">✅ افزودن مهمان</button>
+            </form>
+        </div>
+        
+        <div class="table-container">
+            <div style="padding:15px; border-bottom:1px solid #f0e8d8; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <div>
+                    <input type="text" class="search-box" id="searchInput" placeholder="🔍 جستجوی مهمان..." style="margin-bottom:0;">
+                </div>
+                <div>
+                    <button class="btn btn-sm btn-danger" id="deleteSelectedBtn" style="display:none;" onclick="deleteSelected()">🗑️ حذف انتخاب شده‌ها</button>
+                </div>
+            </div>
+            
+            <table id="membersTable">
+                <thead>
+                    <tr>
+                        <th style="width:30px;"><input type="checkbox" id="selectAll"></th>
+                        <th>#</th>
+                        <th>نام</th>
+                        <th>همراه</th>
+                        <th>وضعیت</th>
+                        <th>لینک دعوت</th>
+                        <th>تاریخ ثبت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if members %}
+                        {% for member in members %}
+                        <tr>
+                            <td><input type="checkbox" class="member-checkbox" value="{{ member.id }}"></td>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ member.name }}</td>
+                            <td>{{ member.companion_type }}</td>
+                            <td>
+                                {% if member.seen %}
+                                    <span class="badge badge-seen">✅ دیده شده</span>
+                                {% else %}
+                                    <span class="badge badge-unseen">❌ دیده نشده</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="link-box">{{ url_for('invite', unique_id=member.unique_id, _external=True) }}</div>
+                                <button class="copy-btn" onclick="copyLink('{{ url_for('invite', unique_id=member.unique_id, _external=True) }}')">📋 کپی</button>
+                            </td>
+                            <td>{{ member.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                <button class="btn btn-sm" style="background:#3498db; color:white;" onclick="viewDetails({{ member.id }})">👁️ جزئیات</button>
+                                <button class="btn btn-sm btn-danger" onclick="deleteMember({{ member.id }})">🗑️</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="8">
+                                <div class="empty-state">
+                                    <div class="icon">📭</div>
+                                    <p>هنوز مهمانی اضافه نشده</p>
+                                    <p>از فرم بالا شروع کن</p>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="modal" id="detailsModal">
+        <div class="modal-content">
+            <h2>👁️ جزئیات مهمان</h2>
+            <div id="detailsContent"></div>
+            <button class="btn btn-primary" style="margin-top:15px;" onclick="closeModal()">بستن</button>
+        </div>
+    </div>
+    
+    <div class="toast" id="toast"></div>
+    
+    <script>
+        document.getElementById('addForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const res = await fetch('/admin/add', { method: 'POST', body: formData });
+            const data = await res.json();
+            if (data.success) {
+                showToast('✅ مهمان با موفقیت اضافه شد!');
+                setTimeout(() => location.reload(), 1000);
+            } else {
+                showToast('❌ ' + data.error);
+            }
+        });
+        
+        async function deleteMember(id) {
+            if (!confirm('آیا مطمئن هستی؟')) return;
+            const res = await fetch('/admin/delete/' + id, { method: 'POST' });
+            const data = await res.json();
+            if (data.success) {
+                showToast('✅ حذف شد');
+                setTimeout(() => location.reload(), 500);
+            }
+        }
+        
+        async function deleteSelected() {
+            const checked = document.querySelectorAll('.member-checkbox:checked');
+            if (checked.length === 0) return;
+            if (!confirm(`آیا از حذف ${checked.length} مهمان مطمئن هستی؟`)) return;
+            const ids = Array.from(checked).map(cb => parseInt(cb.value));
+            const res = await fetch('/admin/bulk-delete', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ ids })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showToast(`✅ ${data.deleted} مهمان حذف شد`);
+                setTimeout(() => location.reload(), 500);
+            }
+        }
+        
+        function copyLink(link) {
+            navigator.clipboard.writeText(link).then(() => {
+                showToast('📋 لینک کپی شد!');
+            });
+        }
+        
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const query = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#membersTable tbody tr');
+            rows.forEach(row => {
+                const name = row.cells[2].textContent.toLowerCase();
+                row.style.display = name.includes(query) ? '' : 'none';
+            });
+        });
+        
+        document.getElementById('selectAll').addEventListener('change', function() {
+            const checkboxes = document.querySelectorAll('.member-checkbox');
+            checkboxes.forEach(cb => cb.checked = this.checked);
+            toggleDeleteButton();
+        });
+        
+        document.querySelectorAll('.member-checkbox').forEach(cb => {
+            cb.addEventListener('change', toggleDeleteButton);
+        });
+        
+        function toggleDeleteButton() {
+            const checked = document.querySelectorAll('.member-checkbox:checked');
+            document.getElementById('deleteSelectedBtn').style.display = checked.length > 0 ? 'inline-block' : 'none';
+        }
+        
+        async function viewDetails(id) {
+            const res = await fetch('/admin/member/' + id);
+            const data = await res.json();
+            if (data.error) {
+                showToast('❌ ' + data.error);
+                return;
+            }
+            const content = document.getElementById('detailsContent');
+            content.innerHTML = `
+                <div class="info-row"><span class="lbl">👤 نام:</span><span class="val">${data.name}</span></div>
+                <div class="info-row"><span class="lbl">👥 همراه:</span><span class="val">${data.companion_type}</span></div>
+                <div class="info-row"><span class="lbl">🔗 وضعیت:</span><span class="val">${data.seen ? '✅ دیده شده' : '❌ دیده نشده'}</span></div>
+                ${data.seen ? `
+                    <div class="info-row"><span class="lbl">📅 زمان دیدن:</span><span class="val">${data.seen_at}</span></div>
+                    <div class="info-row"><span class="lbl">🌐 آی‌پی:</span><span class="val">${data.ip_address}</span></div>
+                    <div class="info-row"><span class="lbl">📱 دستگاه:</span><span class="val">${data.device_type} - ${data.device_brand} ${data.device_model}</span></div>
+                    <div class="info-row"><span class="lbl">💻 سیستم عامل:</span><span class="val">${data.os_info}</span></div>
+                    <div class="info-row"><span class="lbl">🌐 مرورگر:</span><span class="val">${data.browser}</span></div>
+                ` : ''}
+                <div class="info-row"><span class="lbl">🔗 لینک:</span><span class="val" style="direction:ltr; font-size:11px;">${data.link}</span></div>
+                <div class="info-row"><span class="lbl">📅 تاریخ ثبت:</span><span class="val">${data.created_at}</span></div>
+            `;
+            document.getElementById('detailsModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('detailsModal').classList.remove('active');
+        }
+        
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.display = 'block';
+            setTimeout(() => toast.style.display = 'none', 3000);
+        }
+    </script>
+</body>
+</html>

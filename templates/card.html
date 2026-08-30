@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>کارت دعوت عروسی - {{ member.name }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;700&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Reem Kufi', 'Vazir', Tahoma, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            background: #f5e6d3;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(255,215,0,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(255,215,0,0.08) 0%, transparent 50%),
+                linear-gradient(135deg, #f5e6d3 0%, #faf0e6 50%, #f5e6d3 100%);
+        }
+        
+        .card-wrapper { width: 100%; max-width: 900px; padding: 15px; }
+        
+        .card {
+            width: 100%;
+            background: linear-gradient(180deg, #fffdf7 0%, #fff8f0 50%, #fffdf7 100%);
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(139, 90, 43, 0.15), 0 0 0 1px rgba(255, 215, 0, 0.3);
+            border: 3px solid #ffd700;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 10px; left: 10px; right: 10px; bottom: 10px;
+            border: 1px solid rgba(255,215,0,0.3);
+            border-radius: 18px;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .corner {
+            position: absolute;
+            width: 40px; height: 40px;
+            border-color: #ffd700;
+            border-style: solid;
+            opacity: 0.6;
+            z-index: 2;
+        }
+        .corner-tl { top: 15px; right: 15px; border-width: 2px 2px 0 0; border-radius: 0 8px 0 0; }
+        .corner-tr { top: 15px; left: 15px; border-width: 2px 0 0 2px; border-radius: 8px 0 0 0; }
+        .corner-bl { bottom: 15px; right: 15px; border-width: 0 2px 2px 0; border-radius: 0 0 8px 0; }
+        .corner-br { bottom: 15px; left: 15px; border-width: 0 0 2px 2px; border-radius: 0 0 0 8px; }
+        
+        /* ====== چیدمان دو ستونه ====== */
+        .card-layout { display: flex; min-height: 600px; position: relative; z-index: 3; }
+        
+        /* ====== ستون راست - عکس ====== */
+        .right-column {
+            width: 380px;
+            min-width: 380px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .right-column img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .right-column .no-photo {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #faf0e6, #f5e6d3);
+            color: #d4c5a9;
+            font-size: 80px;
+            gap: 15px;
+        }
+        .no-photo span { font-size: 16px; color: #a08060; }
+        
+        .right-column::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to left, transparent 60%, rgba(255,215,0,0.05));
+            pointer-events: none;
+        }
+        
+        /* ====== ستون چپ - مشخصات ====== */
+        .left-column {
+            flex: 1;
+            padding: 45px 35px 40px;
+            text-align: center;
+            color: #2c1810;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .divider {
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, #ffd700, transparent);
+            margin: 30px 0;
+            flex-shrink: 0;
+        }
+        
+        .gold-line {
+            width: 60%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #ffd700, transparent);
+            margin: 15px auto;
+        }
+        
+        .card-header { margin-bottom: 15px; }
+        .card-header .bismillah { font-size: 16px; color: #b8860b; margin-bottom: 10px; letter-spacing: 2px; }
+        .card-header .invitation-text { font-size: 14px; color: #8b7355; margin-bottom: 5px; }
+        .card-header h1 { font-size: 28px; color: #8b6914; font-weight: 700; }
+        
+        .flower-decoration { font-size: 20px; color: #ffd700; margin: 8px 0; letter-spacing: 8px; }
+        
+        .couple-section {
+            margin: 15px 0;
+            padding: 15px;
+            background: linear-gradient(135deg, rgba(255,215,0,0.08), rgba(255,215,0,0.03));
+            border-radius: 15px;
+            border: 1px solid rgba(255,215,0,0.2);
+        }
+        .couple-names {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .couple-names .name { font-size: 22px; font-weight: 700; }
+        .couple-names .name-bride { color: #8b4513; }
+        .couple-names .name-groom { color: #2c1810; }
+        .couple-names .heart {
+            font-size: 24px;
+            color: #c0392b;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+        .couple-text { font-size: 13px; color: #8b6914; margin-top: 8px; }
+        
+        .guest-section { margin: 15px 0; }
+        .guest-label { font-size: 12px; color: #a08060; margin-bottom: 3px; }
+        .guest-name { font-size: 28px; font-weight: 700; color: #2c1810; margin: 3px 0; }
+        .companion-info {
+            font-size: 14px;
+            color: #8b6914;
+            margin: 8px auto;
+            padding: 6px 18px;
+            background: rgba(255,215,0,0.1);
+            border-radius: 20px;
+            display: inline-block;
+            border: 1px solid rgba(255,215,0,0.2);
+        }
+        
+        .details { margin: 15px 0; padding: 15px; background: rgba(255,215,0,0.05); border-radius: 12px; }
+        .details-title { font-size: 13px; color: #8b6914; margin-bottom: 12px; font-weight: 700; }
+        .details p { margin: 7px 0; font-size: 14px; color: #5c4033; display: flex; align-items: center; gap: 8px; }
+        .details .icon { font-size: 16px; width: 25px; text-align: center; }
+        .details .label { color: #a08060; min-width: 45px; font-size: 13px; }
+        .details .value { color: #2c1810; font-weight: 600; font-size: 13px; }
+        
+        .invitation-message {
+            margin: 12px 0;
+            padding: 12px;
+            background: rgba(255,215,0,0.05);
+            border-radius: 10px;
+            border-right: 3px solid #ffd700;
+        }
+        .invitation-message p { font-size: 13px; color: #5c4033; line-height: 1.8; }
+        .invitation-message .highlight { color: #8b6914; font-weight: 700; }
+        
+        .prayer-section { margin: 12px 0; padding: 12px; background: rgba(255,215,0,0.08); border-radius: 10px; }
+        .prayer-section p { font-size: 13px; color: #8b6914; line-height: 1.8; font-style: italic; }
+        
+        .card-footer { margin-top: 12px; padding-top: 10px; border-top: 1px solid rgba(255,215,0,0.2); }
+        .card-footer p { font-size: 12px; color: #a08060; }
+        .unique-badge { margin-top: 8px; padding: 6px; background: rgba(255,215,0,0.08); border-radius: 8px; font-size: 10px; color: #a08060; }
+        
+        .exclusive-tag {
+            position: absolute;
+            top: 20px;
+            left: -30px;
+            background: linear-gradient(135deg, #ffd700, #b8860b);
+            color: white;
+            padding: 5px 35px;
+            font-size: 11px;
+            transform: rotate(-45deg);
+            box-shadow: 0 2px 10px rgba(255,215,0,0.3);
+            z-index: 10;
+        }
+        
+        /* ====== ریسپانسیو - موبایل ====== */
+        @media (max-width: 768px) {
+            .card-layout { flex-direction: column; }
+            .right-column {
+                width: 100%;
+                min-width: 100%;
+                height: 300px;
+            }
+            .left-column { padding: 30px 20px 25px; }
+            .card-header h1 { font-size: 22px; }
+            .couple-names .name { font-size: 18px; }
+            .guest-name { font-size: 24px; }
+            .divider {
+                width: 80%;
+                height: 2px;
+                margin: 0 auto;
+                background: linear-gradient(to right, transparent, #ffd700, transparent);
+            }
+            .corner { width: 25px; height: 25px; }
+            .corner-tl { top: 10px; right: 10px; }
+            .corner-tr { top: 10px; left: 10px; }
+            .corner-bl { bottom: 10px; right: 10px; }
+            .corner-br { bottom: 10px; left: 10px; }
+        }
+        
+        @media (max-width: 480px) {
+            .right-column { height: 250px; }
+            .left-column { padding: 25px 15px 20px; }
+            .card-header h1 { font-size: 20px; }
+            .guest-name { font-size: 22px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="card-wrapper">
+        <div class="card">
+            <div class="exclusive-tag">✨ اختصاصی ✨</div>
+            
+            <div class="corner corner-tl"></div>
+            <div class="corner corner-tr"></div>
+            <div class="corner corner-bl"></div>
+            <div class="corner corner-br"></div>
+            
+            <div class="card-layout">
+                <!-- ====== ستون راست - عکس ====== -->
+                <div class="right-column">
+                    {% if member.photo %}
+                        <img src="{{ member.photo }}" alt="عکس {{ member.name }}">
+                    {% else %}
+                        <div class="no-photo">
+                            👤
+                            <span>عکسی ثبت نشده</span>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="divider"></div>
+                
+                <!-- ====== ستون چپ - مشخصات ====== -->
+                <div class="left-column">
+                    <div class="card-header">
+                        <div class="bismillah">﷽</div>
+                        <div class="flower-decoration">✦ ❀ ✦</div>
+                        <div class="invitation-text">با کمال افتخار به حضورتان اعلام می‌داریم</div>
+                        <h1>💍 مراسم عروسی</h1>
+                        <div class="gold-line"></div>
+                    </div>
+                    
+                    <div class="couple-section">
+                        <div class="couple-names">
+                            <span class="name name-groom">علی رضایی</span>
+                            <span class="heart">❤️</span>
+                            <span class="name name-bride">مریم محمدی</span>
+                        </div>
+                        <div class="flower-decoration">✦</div>
+                        <div class="couple-text">پیوند دو خانواده، آغاز زندگی مشترک</div>
+                    </div>
+                    
+                    <div class="gold-line"></div>
+                    
+                    <div class="guest-section">
+                        <div class="guest-label">🎀 مهمان عزیز</div>
+                        <div class="guest-name">{{ member.name }}</div>
+                        <div class="companion-info">
+                            {% if member.companion_type == "با خانواده" %}
+                                👨‍👩‍👧‍👦 به همراه خانواده
+                            {% elif member.companion_type == "با بانو" %}
+                                💑 به همراه بانو
+                            {% else %}
+                                🙋 به تنهایی
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="details">
+                        <div class="details-title">📋 جزئیات مراسم</div>
+                        <p><span class="icon">📅</span><span class="label">تاریخ:</span><span class="value">۱۵ شهریور ۱۴۰۴</span></p>
+                        <p><span class="icon">⏰</span><span class="label">ساعت:</span><span class="value">۱۸:۰۰ الی ۲۲:۰۰</span></p>
+                        <p><span class="icon">📍</span><span class="label">مکان:</span><span class="value">تالار ..., تهران</span></p>
+                        <p><span class="icon">👔</span><span class="label">دعوت‌کننده:</span><span class="value">خانواده رضایی و محمدی</span></p>
+                    </div>
+                    
+                    <div class="invitation-message">
+                        <p>حضور گرم شما در این شب فرخنده، <span class="highlight">ما را شادمان</span> و این لحظه را <span class="highlight">به‌یادماندنی</span> خواهد کرد.</p>
+                    </div>
+                    
+                    <div class="prayer-section">
+                        <p>«پروردگارا، این دو دل را به هم پیوند ده<br>و زندگی‌شان را سرشار از عشق، برکت و شادکامی گردان»</p>
+                    </div>
+                    
+                    <div class="gold-line"></div>
+                    
+                    <div class="card-footer">
+                        <p>✨ حضور شما باعث افتخار ماست ✨</p>
+                        <div class="unique-badge">این کارت مخصوص <strong>{{ member.name }}</strong> است</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

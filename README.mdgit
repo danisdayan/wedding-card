@@ -1,0 +1,2 @@
+"# wedding-card"  initgit add README.mdgit commit -m "first commit"git branch -M maingit remote add origin https://github.com/danisdayan/wedding-card.gitgit push -u origin main
+"# wedding-card"  initgit add README.mdgit commit -m "first commit"git branch -M maingit remote add origin https://github.com/danisdayan/wedding-card.gitgit push -u origin main
